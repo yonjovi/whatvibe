@@ -3,16 +3,12 @@ import streamlit as st
 import json
 import time
 import plotly.graph_objs as go
-import scipy
 import tweepy
 import textblob
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 import re
-from streamlit_lottie import st_lottie
 from streamlit_lottie import st_lottie_spinner
-from keys import TWITTER_API_KEY, TWITTER_API_KEY_SECRET, TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET, OPENAI_API_KEY
+# from keys import TWITTER_API_KEY, TWITTER_API_KEY_SECRET, TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET, OPENAI_API_KEY
 
 summarised_tweets_str = ''
 
@@ -36,7 +32,9 @@ def summarise(text_input):
 
 
 def conclude(text_input):
-    openai.api_key = OPENAI_API_KEY
+    # openai.api_key = OPENAI_API_KEY
+    openai.api_key = st.secrets["OPENAI_API_KEY"]
+
 
     response = openai.Completion.create(
         model="text-davinci-002",
@@ -56,10 +54,15 @@ def load_lottiefile(filepath: str):
         return json.load(f)
 
 
-api_key = TWITTER_API_KEY
-api_key_secret = TWITTER_API_KEY_SECRET
-access_token = TWITTER_ACCESS_TOKEN
-access_token_secret = TWITTER_ACCESS_TOKEN_SECRET
+# api_key = TWITTER_API_KEY
+# api_key_secret = TWITTER_API_KEY_SECRET
+# access_token = TWITTER_ACCESS_TOKEN
+# access_token_secret = TWITTER_ACCESS_TOKEN_SECRET
+
+api_key = st.secrets["TWITTER_API_KEY"]
+api_key_secret = st.secrets["TWITTER_API_KEY_SECRET"]
+access_token = st.secrets["TWITTER_ACCESS_TOKEN"]
+access_token_secret = st.secrets["TWITTER_ACCESS_TOKEN_SECRET"]
 
 authenticator = tweepy.OAuthHandler(api_key, api_key_secret)
 authenticator.set_access_token(access_token, access_token_secret)
