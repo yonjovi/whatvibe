@@ -10,8 +10,15 @@ import re
 from streamlit_lottie import st_lottie_spinner
 # from keys import TWITTER_API_KEY, TWITTER_API_KEY_SECRET, TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET, OPENAI_API_KEY
 
-summarised_tweets_str = ''
+page_bg_img = """
+<style>
 
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+header {visibility: hidden;}
+"""
+
+st.markdown(page_bg_img, unsafe_allow_html=True)
 
 def summarise(text_input):
     openai.api_key = OPENAI_API_KEY
@@ -76,7 +83,7 @@ vibe_input = st.text_input('Please enter ANYTHING, see what twitter thinks about
 lottie_progress = load_lottiefile("happysad.json")
 
 if vibe_input:
-    with st_lottie_spinner(lottie_progress, loop=True, key="progress", height=350, width=350):
+    with st_lottie_spinner(lottie_progress, loop=True, key="progress", height=250, width=250):
         time.sleep(1)
         search = f'#{vibe_input} -filter:retweets'
 
@@ -95,6 +102,8 @@ if vibe_input:
             tweets_str += f"\n{tweet}"
 
         sumtweet = conclude(tweets_str)
+        st.write(sumtweet)
+
         tweets_df['Polarity'] = tweets_df['Tweets'].map(lambda tweet: textblob.TextBlob(tweet).sentiment.polarity)
         tweets_df['Result'] = tweets_df['Polarity'].map(lambda pol: '+' if pol > 0 else '-')
 
@@ -105,15 +114,15 @@ if vibe_input:
         group_labels = ['Positive', 'Negative']
 
         trace1 = go.Bar(
-            x=["Positive"],
+            x=["Positive words/vibes 😇"],
             y=[positive],
-            name="Positive"
+            name="Positive words/vibes"
         )
 
         trace2 = go.Bar(
-            x=["Negative"],
+            x=["Negative words/vibes 🤬"],
             y=[negative],
-            name="Negative"
+            name="Negative words/vibes"
         )
 
         data = [trace1, trace2]
@@ -122,6 +131,9 @@ if vibe_input:
         )
 
         fig = go.Figure(data=data, layout=layout)
+        fig.update_layout(
+            title="Sentiment Analysis based on Tweets",
+            yaxis_title="Number of Tweets",
+        )
         plot = st.plotly_chart(fig, use_container_width=True)
-
-        st.write(sumtweet)
+        st.warning("Please note that Sentiment analysis scores take into account rude and slang words as negative and may not reflect the true nature or meaning of the tweets. The summary above analyses the tweets and understands context, jokes, and slang (even rude words)!")
