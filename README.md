@@ -8,6 +8,9 @@ The app then analyses and summarises the tweets using the Textblob library and O
 
 I used the Streamlit library to run the web app and used generic components for the front end.
 
+**You can check the app out here:**
+https://yonjovi-whatvibe-main-ca925j.streamlitapp.com/
+
 I hope you gain some useful insights using the app. 
 
 Thanks,
